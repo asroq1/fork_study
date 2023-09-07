@@ -1,0 +1,44 @@
+name: "Pick Random Reviwer"
+
+on:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
+
+jobs:
+  pick-random-reviwer:
+    runs-on: ubuntu-latest
+    steps:
+      // 1️⃣ 체크아웃
+      - uses: actions/checkout@v2
+      
+      // 2️⃣ js 로 랜덤 1명 추출
+      - name: pick_random_reviwer
+        id: pick_random_reviwer // 다음 step 에 output 을 넘기기 위해 추가
+        uses: actions/github-script@v3 // js 를 사용하기 위해 사용합니다
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const candidate = ['reviewer1', 'reviewer2', 'reviewer3'];
+            const randomReviewer = candidate[Math.floor(Math.random() * candidate.length)];
+            const comment = `🎉 @${randomReviewer} 님 랜덤 리뷰어로 당첨되셨습니다! 리뷰를 부탁드립니다. 🙏`
+            core.setOutput('comment', comment) // output 을 세팅합니다
+            core.setOutput('reviewer', randomReviewer) // core.setOutput(이름, 값)
+      
+      // 3️⃣ 댓글 추가
+      - name: comment PR
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            ${{ steps.pick_random_reviwer.outputs.comment }} // output 을 가져옵니다 ${{ steps.[step-id].outputs.[output-id] }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]'
+      
+      // 4️⃣ 리뷰어 추가
+      - name: Add Pull Request Reviewer
+        uses: madrapps/add-reviewers@v1
+        with:
+          reviewers: ${{ steps.pick_random_reviwer.outputs.reviewer }}
+          token: ${{ secrets.GITHUB_TOKEN }}
