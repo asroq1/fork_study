@@ -1,3 +1,17 @@
 name: Check Code Convention
 on: 
   pull_request:
+    branches:
+      - develop
+jobs:
+  test:
+    name: Check Code Convention
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions;/checkout@v2
+      - name: install packages
+        run: npm ci
+      - name: Prettier
+        run: npm run format
+      - name: Lint
+        run: npm run lint
