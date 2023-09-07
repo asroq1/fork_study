@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "node_modules/.bin/prettier --write '**/*.{js,ts,tsx,jsx}'"
   },
   "dependencies": {
     "@types/node": "20.5.9",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "eslint": "^8.48.0",
     "eslint-plugin-airbnb": "^0.0.1-security",
-    "eslint-plugin-react": "^7.33.2"
+    "eslint-plugin-react": "^7.33.2",
+    "prettier": "^3.0.3"
   }
 }
